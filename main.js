@@ -25,3 +25,13 @@ const kml = new ol.layer.Vector({
 });
 
 map.addLayer(kml);
+
+// 這邊則改為GPX資料為範例
+const gpx = new ol.layer.Vector({
+    source: new ol.source.Vector({
+        url: '五寮尖.gpx',
+        format: new ol.format.GPX(),
+    }),
+});
+
+map.addLayer(gpx);
