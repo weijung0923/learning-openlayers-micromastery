@@ -1,0 +1,15 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* 方案二
+.ol-scale-line .ol-scale-line-inner {
+    font-size: 20px;
+} */
