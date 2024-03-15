@@ -1,8 +1,26 @@
+// 建立空layer
+let coffeeLayer = new ol.layer.Vector({
+    // 設定空source
+    source: new ol.source.Vector(),
+
+    // 設定此layer feature style
+    style: new ol.style.Style({
+        image: new ol.style.Icon({
+            anchor: [0.5, 1],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'fraction',
+            src: 'coffee.png',
+            scale: 0.1
+        }),
+    })
+});
+
 const map = new ol.Map({
     layers: [
         new ol.layer.Tile({
             source: new ol.source.OSM()
-        })
+        }),
+        coffeeLayer
     ],
     target: 'map',
     view: new ol.View({
@@ -16,14 +34,9 @@ const map = new ol.Map({
     controls: []
 });
 
-
 function getCoffeeData() {
     axios.get("coffee.json")
         .then((res) => {
-            // 建立空layer
-            let coffeeLayer = new ol.layer.Vector({
-                source: new ol.source.Vector({})
-            });
             // 解構資料
             let { data } = res;
 
@@ -33,33 +46,19 @@ function getCoffeeData() {
                     new ol.Feature({
                         geometry: new ol.geom.Point(
                             ol.proj.fromLonLat([
-                                data[i]['longitude'], 
+                                data[i]['longitude'],
                                 data[i]['latitude']
                             ])
                         )
                     })
                 )
             }
-            // 加入layer到map
-            map.addLayer(coffeeLayer);
-
-            // 設定點的樣式
-            const iconStyle = new ol.style.Style({
-                image: new ol.style.Icon({
-                    anchor: [0.5, 1],
-                    anchorXUnits: 'fraction',
-                    anchorYUnits: 'fraction',
-                    src: 'coffee.png',
-                    scale: 0.1
-                }),
-            });
-
-            // 設定layer的樣式
-            coffeeLayer.setStyle(iconStyle);
         })
         .catch((err) => {
             console.log(err)
         })
 }
 
-getCoffeeData()
+// 執行抓取API的function 
+getCoffeeData();
+
