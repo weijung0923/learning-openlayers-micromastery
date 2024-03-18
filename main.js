@@ -62,3 +62,56 @@ function getCoffeeData() {
 // 執行抓取API的function 
 getCoffeeData();
 
+////////////////////// 新增Popup和click機制 /////////////////////
+
+
+/**
+ * Elements that make up the popup.
+ */
+const container = document.getElementById('popup');
+const content = document.getElementById('popup-content');
+const closer = document.getElementById('popup-closer');
+
+/**
+ * Create an overlay to anchor the popup to the map.
+ */
+const overlay = new ol.Overlay({
+    element: container,
+    autoPan: {
+        animation: {
+            duration: 250,
+        },
+    },
+});
+
+
+/**
+ * Add a click handler to hide the popup.
+ * @return {boolean} Don't follow the href.
+ */
+closer.onclick = function () {
+    overlay.setPosition(undefined);
+    closer.blur();
+    return false;
+};
+
+map.addOverlay(overlay)
+
+// click的時候顯示popup
+map.on('singleclick', function (evt) {
+    const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+        return feature;
+    });
+
+    if (!feature) {
+        return;
+    }
+
+    console.log(feature)
+
+    const coordinate = evt.coordinate;
+    // const hdms = toStringHDMS(toLonLat(coordinate));
+
+    content.innerHTML = '<p>You clicked here:</p><code>' + '</code>';
+    overlay.setPosition(coordinate);
+});
