@@ -34,6 +34,7 @@ const map = new ol.Map({
     controls: []
 });
 
+// https://cafenomad.tw/developers/docs/v1.2?source=post_page-----75cf8c06177c--------------------------------
 function getCoffeeData() {
     axios.get("coffee.json")
         .then((res) => {
@@ -49,7 +50,10 @@ function getCoffeeData() {
                                 data[i]['longitude'],
                                 data[i]['latitude']
                             ])
-                        )
+                        ),
+                        wifi: data[i]['wifi'],
+                        seat: data[i]['seat'],
+                        cheap: data[i]['cheap']
                     })
                 )
             }
@@ -64,17 +68,12 @@ getCoffeeData();
 
 ////////////////////// 新增Popup和click機制 /////////////////////
 
-
-/**
- * Elements that make up the popup.
- */
+// js取得dom元素
 const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
 const closer = document.getElementById('popup-closer');
 
-/**
- * Create an overlay to anchor the popup to the map.
- */
+// 新增overlay的物件
 const overlay = new ol.Overlay({
     element: container,
     autoPan: {
@@ -84,11 +83,7 @@ const overlay = new ol.Overlay({
     },
 });
 
-
-/**
- * Add a click handler to hide the popup.
- * @return {boolean} Don't follow the href.
- */
+// 新增關閉popup的click事件
 closer.onclick = function () {
     overlay.setPosition(undefined);
     closer.blur();
@@ -107,11 +102,15 @@ map.on('singleclick', function (evt) {
         return;
     }
 
-    console.log(feature)
-
+    // 取得地圖位置
     const coordinate = evt.coordinate;
-    // const hdms = toStringHDMS(toLonLat(coordinate));
 
-    content.innerHTML = '<p>You clicked here:</p><code>' + '</code>';
+    // 可以根據需求設定樣式，透過HTML和CSS組合取得feature的內容
+    // 或是自定義想要的參數一次取得內容
+    content.innerHTML = `   
+                            WIFI訊號：${feature.get('wifi')}<br>
+                            座位多寡：${feature.get('seat')}<br>
+                            是否便宜：${feature.get('cheap')}
+                        `;
     overlay.setPosition(coordinate);
 });
